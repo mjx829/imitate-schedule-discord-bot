@@ -1,8 +1,11 @@
 import "dotenv/config";
+import { log } from "@/utils/logger";
 
 const requireEnv = (key: string): string => {
     const value = process.env[key];
     if (!value) throw new Error(`env ${key} was not defined.`);
+
+    log.write("DEBUG", `env ${key.charAt(0)}... was loaded.`);
     return String(value);
 }
 
@@ -19,6 +22,6 @@ export const CONFIG = {
         URL: '',
     },
     DISCORD: {
-        WEBHOOK_URL: requireEnv(""),
+        WEBHOOK_URL: requireEnv("DISCORD_WEBHOOK_URL"),
     }
 }
