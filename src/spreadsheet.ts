@@ -89,7 +89,6 @@ const parseCellsRows = (rows: GoogleSpreadsheetRow<Record<string, any>>[], date:
             badge: String(row.get(CONFIG.SPERADSHEET.HEADER.BADGE)),
             category: String(row.get(CONFIG.SPERADSHEET.HEADER.CATEGORY)),
             url: String(row.get(CONFIG.SPERADSHEET.HEADER.URL)),
-            publishedAt: null,
         });
     }
 
