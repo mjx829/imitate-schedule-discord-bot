@@ -1,7 +1,7 @@
 import { log } from "@/utils/logger";
 import { fetchCellsFromDate } from "@/spreadsheet";
 import { applyFilters, hasValidUrl, notInAuthorDenyList, inCategoryAllowList } from "@/filter";
-import { fetchVideoFromId } from "@/youtube";
+import { fetchVideoFromIds } from "@/youtube";
 
 process.on("uncaughtException", (e) => {
     log.write("ERROR", `uncaught exception. (${(e as Error).message})(${(e as Error).stack})`);
@@ -31,7 +31,7 @@ async function main(): Promise<void> {
 
         const ids = ["U80I6Wiygd8", "r7qBZ-KFUJw", "R-z-UGziThQ"];
 
-        console.log(await fetchVideoFromId(ids));
+        console.log(await fetchVideoFromIds(ids));
 
         // console.log(filteredCell);
 
