@@ -13,7 +13,7 @@ export type Cell = {
     publishedAt: Date | null,
 }
 
-export type CellFilter = (cell: Cell) => Cell;
+export type CellFilter = (cell: Cell) => boolean;
 
 export type ParsedDate = {
     year: string
