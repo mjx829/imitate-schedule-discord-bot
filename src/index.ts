@@ -1,4 +1,6 @@
 import { log } from "@/utils/logger";
+import { fetchCellsFromDate } from "@/spreadsheet";
+import { applyFilters, hasValidUrl, notInAuthorDenyList, inCategoryAllowList } from "@/filter";
 
 process.on("uncaughtException", (e) => {
     log.write("ERROR", `uncaught exception. (${(e as Error).message})(${(e as Error).stack})`);
@@ -11,9 +13,22 @@ process.on("unhandledRejection", (reason) => {
     process.exit(1);
 });
 
-function main(): void {
+async function main(): Promise<void> {
     try {
         log.write("INFO", "starting...");
+
+        const categoryList = ["曲", "アレンジ", "予告"];
+        const youtubeUrl = /^https?:\/\/(www\.youtube\.com\/watch\?v=|youtu\.be\/)[\w-]+/;
+
+        // new Date(new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }))
+        const cells = await fetchCellsFromDate(new Date(2026, 2, 2));
+        const filteredCell = applyFilters(
+            cells,
+            hasValidUrl(youtubeUrl),
+            inCategoryAllowList(categoryList),
+        );
+
+        console.log(filteredCell);
 
         process.on("SIGTERM", () => { 
             process.exit(0);
