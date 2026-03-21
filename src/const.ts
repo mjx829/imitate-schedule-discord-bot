@@ -27,7 +27,7 @@ export const CONFIG = {
     },
     YOUTUBE: {
         KEY: requireEnv("YOUTUBE_DATA_API_KEY"),
-        URL: '',
+        BASE_URL: 'https://www.googleapis.com/youtube/v3/',
     },
     DISCORD: {
         WEBHOOK_URL: requireEnv("DISCORD_WEBHOOK_URL"),

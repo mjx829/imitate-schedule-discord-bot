@@ -11,6 +11,7 @@ export type Cell = {
     category: string,
     url: string,
     publishedAt: Date | null,
+    authorIconUrl: string | null,
 }
 
 export type CellFilter = (cell: Cell) => boolean;
@@ -19,4 +20,25 @@ export type ParsedDate = {
     year: string
     date: string,
     dateObj: Date,
+}
+
+export type YoutubeVideoItem = {
+    id: string,
+    snippet: {
+        title: string,
+        channelId: string,
+        channelTitle: string,
+        publishedAt: string,
+    },
+    liveStreamingDetails?: {
+        scheduledStartTime?: string,
+    },
+}
+
+export type VideoInfo = {
+    id: string,
+    title: string,
+    channelId: string,
+    channelTitle: string,
+    publishedAt: Date,
 }
