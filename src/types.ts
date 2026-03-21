@@ -34,6 +34,17 @@ export type YoutubeVideoItem = {
         scheduledStartTime?: string,
     },
 }
+export type YoutubeChannelItem = {
+    id: string,
+    snippet: {
+        title: string,
+        thumbnails: {
+            high: {
+                url: string,
+            },
+        },
+    },
+}
 
 export type VideoInfo = {
     id: string,
@@ -41,4 +52,9 @@ export type VideoInfo = {
     channelId: string,
     channelTitle: string,
     publishedAt: Date,
+}
+
+export type ChannelIcon = {
+    channelId: string,
+    iconUrl: string,
 }
