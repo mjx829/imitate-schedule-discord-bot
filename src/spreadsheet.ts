@@ -1,21 +1,8 @@
+import { RowRange, Cell, ParsedDate } from "@/types";
 import { GoogleSpreadsheet, GoogleSpreadsheetWorksheet, GoogleSpreadsheetRow } from "google-spreadsheet";
 import { CONFIG } from "@/const";
 import { log } from "@/utils/logger";
 import { auth } from "@/auth";
-
-type RowRange = {
-    offset: number,
-    range: number,
-}
-
-type Cell = {
-    date: string,
-    title: string,
-    author: string,
-    badge: string,
-    category: string,
-    url: string,
-}
 
 const initDoc = async (): Promise<GoogleSpreadsheet> => {
     const doc = new GoogleSpreadsheet(CONFIG.SPERADSHEET.SHEET_ID, auth());
@@ -80,7 +67,7 @@ const fetchCellsFromRange = async (sheet: GoogleSpreadsheetWorksheet, offset: nu
     return rows;
 }
 
-const parseDate = (date: Date): { year: string, date: string } => {
+const parseDate = (date: Date): ParsedDate => {
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
     const day = date.getDate();
@@ -88,19 +75,21 @@ const parseDate = (date: Date): { year: string, date: string } => {
     return {
         year: String(year),
         date: `${month}/${day}`,
+        dateObj: date,
     }
 }
 
-const parseCellsRows = (rows: GoogleSpreadsheetRow<Record<string, any>>[], date: string): Cell[] => {
+const parseCellsRows = (rows: GoogleSpreadsheetRow<Record<string, any>>[], date: ParsedDate): Cell[] => {
     let parsedRows = [];
     for (const row of rows) {
         parsedRows.push({
-            date: String(row.get(CONFIG.SPERADSHEET.HEADER.DATE)) || date,
+            date: date.dateObj,
             title: String(row.get(CONFIG.SPERADSHEET.HEADER.TITLE)),
             author: String(row.get(CONFIG.SPERADSHEET.HEADER.AUTHOR)),
             badge: String(row.get(CONFIG.SPERADSHEET.HEADER.BADGE)),
             category: String(row.get(CONFIG.SPERADSHEET.HEADER.CATEGORY)),
             url: String(row.get(CONFIG.SPERADSHEET.HEADER.URL)),
+            publishedAt: null,
         });
     }
 
@@ -115,7 +104,7 @@ export const fetchCellsFromDate = async (date: Date): Promise<Cell[]> => {
     const rows = await fetchCellsFromRange(sheet, range.offset, range.range);
 
     if (!rows) return [];
-    const cells = parseCellsRows(rows, parsedDate.date);
+    const cells = parseCellsRows(rows, parsedDate);
 
     return cells;
 }

@@ -16,7 +16,8 @@ async function main(): Promise<void> {
     try {
         log.write("INFO", "starting...");
 
-        const cells = await fetchCellsFromDate(new Date(2026, 2, 2));
+        // new Date(new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }))
+        const cells = await fetchCellsFromDate(new Date(2026, 0, 25));
 
         console.log(cells);
 
