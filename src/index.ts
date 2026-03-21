@@ -36,7 +36,7 @@ async function main(): Promise<void> {
 
         console.log(channelIcon);
 
-        // console.log(filteredCell);
+        console.log(filteredCell);
 
         process.on("SIGTERM", () => { 
             process.exit(0);

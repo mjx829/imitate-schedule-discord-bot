@@ -34,8 +34,8 @@ export const fetchChannelIconsFromIds = async (ids: string[]): Promise<ChannelIc
 
     const uniqueIds = [...new Set(ids)];
 
-    for (let i = 0; i < ids.length; i += 50) {
-        const chunk = ids.slice(i, i + 50);
+    for (let i = 0; i < uniqueIds.length; i += 50) {
+        const chunk = uniqueIds.slice(i, i + 50);
         const url = `${CONFIG.YOUTUBE.BASE_URL}channels?id=${chunk.join(",")}&part=snippet&key=${CONFIG.YOUTUBE.KEY}`;
         const res = await fetch(url);
         const data = await res.json();
