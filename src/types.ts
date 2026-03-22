@@ -2,8 +2,8 @@ export type CardData = {
     date: Date,
     title: string,
     author: string,
-    badge: string,
-    iconUrl: string,
+    badge?: string,
+    iconUrl?: string,
 }
 
 // spreadsheet
