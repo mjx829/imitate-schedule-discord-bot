@@ -9,8 +9,8 @@ export type CardData = {
 // spreadsheet
 
 export type RowRange = {
-    offset: number,
-    range: number,
+    offset?: number,
+    range?: number,
 }
 
 export type Cell = {

@@ -31,19 +31,19 @@ const fetchDateColumnsRange = async (sheet: GoogleSpreadsheetWorksheet, index: s
     let offset = 0;
     let range = 0;
 
-    const HEADER_ROW_OFFSET = -1;
+    const HEADER_ROW_OFFSET = 0;
 
     for (let i = 0; i < sheet.rowCount; i++) {
         const cell = sheet.getCell(i, 0);
         if (!cell) break;
         const value = cell.value;
-        
+
         if (value) {
             emptyCellsCount = 0;
         } else {
             emptyCellsCount++;
         }
-        if (emptyCellsCount > MAX_EMPTY_CELLS_COUNT) break;
+        if (emptyCellsCount > MAX_EMPTY_CELLS_COUNT) return {};
 
         if (value === date && !isCollecting) {
             isCollecting = true;
@@ -58,7 +58,7 @@ const fetchDateColumnsRange = async (sheet: GoogleSpreadsheetWorksheet, index: s
         }
     }
     
-    return { offset, range };
+    return { offset: offset, range: range };
 }
 
 const fetchCellsFromRange = async (sheet: GoogleSpreadsheetWorksheet, offset: number, range: number) => {
@@ -96,10 +96,13 @@ const parseCellsRows = (rows: GoogleSpreadsheetRow<Record<string, any>>[], date:
 }
 
 export const fetchCellsFromDate = async (date: Date): Promise<Cell[]> => {
+    log.write("DEBUG", `cells on ${date} will find...`);
     const parsedDate = parseDate(date);
     const doc = await initDoc();
     const sheet = await fetchSheet(doc, parsedDate.year);
     const range = await fetchDateColumnsRange(sheet, "A:A", parsedDate.date);
+
+    if (!(range.offset && range.range)) return [];
     const rows = await fetchCellsFromRange(sheet, range.offset, range.range);
 
     if (!rows) return [];

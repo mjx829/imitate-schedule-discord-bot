@@ -1,8 +1,10 @@
 import { log } from "@/utils/logger";
 import { fetchCellsFromDate } from "@/spreadsheet";
-import { applyFilters, hasValidUrl, notInAuthorDenyList, inCategoryAllowList } from "@/filter";
-import { fetchVideoFromIds, fetchChannelIconsFromIds } from "@/youtube";
+import { applyFilters, hasValidUrl, inCategoryAllowList } from "@/filter";
 import { fetchCellsInfoFromYt } from "@/aggregate";
+import { genSchedule } from "@/svg";
+import { sendWebhook } from "@/webhook";
+import sharp from "sharp";
 
 process.on("uncaughtException", (e) => {
     log.write("ERROR", `uncaught exception. (${(e as Error).message})(${(e as Error).stack})`);
@@ -23,16 +25,19 @@ async function main(): Promise<void> {
         const youtubeUrl = /^https?:\/\/(www\.youtube\.com\/watch\?v=|youtu\.be\/)[\w-]+/;
 
         // new Date(new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }))
-        const cells = await fetchCellsFromDate(new Date(2026, 2, 2));
+        const date = new Date(2026, 0, 25);
+        const cells = await fetchCellsFromDate(date);
         const filteredCell = applyFilters(
             cells,
             hasValidUrl(youtubeUrl),
             inCategoryAllowList(categoryList),
         );
 
-        await fetchCellsInfoFromYt(filteredCell);
+        const cards = await fetchCellsInfoFromYt(filteredCell);
+        const svg = await genSchedule(date, cards);
+        const buffer = await sharp(Buffer.from(svg)).png().toBuffer();
 
-        // console.log(channelIcon);
+        await sendWebhook(buffer);
 
         process.on("SIGTERM", () => { 
             process.exit(0);
