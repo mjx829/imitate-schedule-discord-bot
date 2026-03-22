@@ -2,6 +2,7 @@ import { log } from "@/utils/logger";
 import { fetchCellsFromDate } from "@/spreadsheet";
 import { applyFilters, hasValidUrl, notInAuthorDenyList, inCategoryAllowList } from "@/filter";
 import { fetchVideoFromIds, fetchChannelIconsFromIds } from "@/youtube";
+import { fetchCellsInfoFromYt } from "@/aggregate";
 
 process.on("uncaughtException", (e) => {
     log.write("ERROR", `uncaught exception. (${(e as Error).message})(${(e as Error).stack})`);
@@ -29,14 +30,9 @@ async function main(): Promise<void> {
             inCategoryAllowList(categoryList),
         );
 
-        const ids = ["U80I6Wiygd8", "r7qBZ-KFUJw", "R-z-UGziThQ"];
+        await fetchCellsInfoFromYt(filteredCell);
 
-        const videoInfo = await fetchVideoFromIds(ids);
-        const channelIcon = await fetchChannelIconsFromIds(videoInfo.map(v => v.channelId));
-
-        console.log(channelIcon);
-
-        console.log(filteredCell);
+        // console.log(channelIcon);
 
         process.on("SIGTERM", () => { 
             process.exit(0);
