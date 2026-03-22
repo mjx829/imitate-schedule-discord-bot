@@ -25,7 +25,7 @@ async function main(): Promise<void> {
         const youtubeUrl = /^https?:\/\/(www\.youtube\.com\/watch\?v=|youtu\.be\/)[\w-]+/;
 
         // new Date(new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }))
-        const date = new Date(2026, 0, 25);
+        const date = new Date(2026, 0, 24);
         const cells = await fetchCellsFromDate(date);
         const filteredCell = applyFilters(
             cells,
